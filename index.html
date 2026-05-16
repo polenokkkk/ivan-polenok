@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee&family=Space+Grotesk:wght@400;500;700&display=swap');
 
 :root{
   --ink:#0A0A0A;
@@ -231,6 +231,38 @@ section{border-bottom:4px solid var(--ink);position:relative}
 
 /* ─────────── lil.bet co-brand + sfx + motto ─────────── */
 .lilbet-mark{font-family:'Anton',sans-serif;font-weight:400;background:var(--ink);color:var(--yellow);padding:0 8px;border:1.5px solid var(--ink);font-style:normal;letter-spacing:-.01em;display:inline-block}
+.brand-bungee{font-family:'Bungee',sans-serif !important;letter-spacing:.02em;-webkit-text-stroke:0 !important;color:inherit !important}
+
+/* ── INTRO OVERLAY (comic film intro) ── */
+body:not(.intro-done){overflow:hidden}
+.intro{position:fixed;inset:0;z-index:9999;background:#0A0A0A;overflow:hidden;animation:introFade .5s ease 2.4s forwards}
+.intro__tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:0}
+.intro__tile{position:relative;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;letter-spacing:.14em;font-size:clamp(16px,2.6vw,28px);border:3px solid #0A0A0A;animation:tileFlip .28s steps(1) infinite;overflow:hidden}
+.intro__tile::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.25) 1px,transparent 1.4px);background-size:8px 8px;opacity:.5}
+.intro__tile span{position:relative;z-index:1;text-align:center;padding:6px 10px;line-height:1}
+.intro__tile.t1{background:#E63946;color:#FFF8E7}
+.intro__tile.t2{background:#FFD60A;color:#0A0A0A;animation-delay:.05s}
+.intro__tile.t3{background:#0A0A0A;color:#FFD60A;animation-delay:.1s}
+.intro__tile.t4{background:#FFF8E7;color:#0A0A0A;animation-delay:.15s}
+.intro__tile.t5{background:#1D3557;color:#FFD60A;animation-delay:.07s}
+.intro__tile.t6{background:#FFD60A;color:#E63946;animation-delay:.12s}
+.intro__tile.t7{background:#0A0A0A;color:#FFF8E7;animation-delay:.02s}
+.intro__tile.t8{background:#E63946;color:#FFD60A;animation-delay:.18s}
+.intro__tile.t9{background:#FFF8E7;color:#E63946;animation-delay:.09s}
+.intro__tile.t10{background:#FFD60A;color:#0A0A0A;animation-delay:.13s}
+.intro__tile.t11{background:#1D3557;color:#FFF8E7;animation-delay:.04s}
+.intro__tile.t12{background:#0A0A0A;color:#E63946;animation-delay:.16s}
+.intro__mask{position:absolute;inset:0;width:100%;height:100%;animation:introZoom 2.4s cubic-bezier(.55,0,.7,1) forwards;transform-origin:38% 50%}
+.intro__tag{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-family:'Bebas Neue',sans-serif;letter-spacing:.3em;font-size:14px;padding:7px 16px;background:#FFD60A;color:#0A0A0A;border:2.5px solid #0A0A0A;box-shadow:5px 5px 0 #E63946;animation:tagBlink 1s steps(2) infinite;z-index:3}
+.intro__skip{position:absolute;bottom:24px;right:24px;font-family:'Bebas Neue',sans-serif;letter-spacing:.2em;font-size:13px;padding:7px 14px;background:#0A0A0A;color:#FFF8E7;border:2px solid #FFF8E7;cursor:pointer;z-index:3;text-decoration:none}
+.intro__skip:hover{background:#FFD60A;color:#0A0A0A;border-color:#0A0A0A}
+@keyframes introZoom{0%{transform:scale(.55)}25%{transform:scale(.95)}100%{transform:scale(11)}}
+@keyframes tileFlip{0%,49%{filter:none}50%,100%{filter:invert(1) hue-rotate(180deg)}}
+@keyframes tagBlink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes introFade{to{opacity:0;visibility:hidden}}
+body.intro-done .intro{display:none}
+@media (max-width:500px){.intro__tiles{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr)}.intro__tile.t10,.intro__tile.t11,.intro__tile.t12{display:none}}
+@media (prefers-reduced-motion:reduce){.intro{animation:introFade .2s ease .2s forwards}.intro__mask,.intro__tile{animation:none}}
 .hero__kicker{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 18px;position:relative;z-index:2;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:18px}
 .hero__kicker span{padding:6px 12px;border:2.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink);background:var(--ink);color:var(--cream);display:inline-block}
 .hero__kicker span.k-direct{background:var(--red);color:var(--cream)}
@@ -378,6 +410,35 @@ section{border-bottom:4px solid var(--ink);position:relative}
 </head>
 <body>
 
+<!-- ─────────────── INTRO OVERLAY ─────────────── -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__tiles">
+    <div class="intro__tile t1"><span>★ SLOTS</span></div>
+    <div class="intro__tile t2"><span>♠ POKER</span></div>
+    <div class="intro__tile t3"><span>⚽ FOOTBALL</span></div>
+    <div class="intro__tile t4"><span>◆ ROULETTE</span></div>
+    <div class="intro__tile t5"><span>🏀 BASKET</span></div>
+    <div class="intro__tile t6"><span>★ LIVE BET</span></div>
+    <div class="intro__tile t7"><span>♦ BLACKJACK</span></div>
+    <div class="intro__tile t8"><span>⚡ CRASH</span></div>
+    <div class="intro__tile t9"><span>🎾 TENNIS</span></div>
+    <div class="intro__tile t10"><span>♣ BACCARAT</span></div>
+    <div class="intro__tile t11"><span>★ ESPORTS</span></div>
+    <div class="intro__tile t12"><span>⚡ MMA</span></div>
+  </div>
+  <svg class="intro__mask" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <mask id="introCut">
+        <rect width="100%" height="100%" fill="white"/>
+        <text x="600" y="320" text-anchor="middle" font-family="Bungee, Anton, sans-serif" font-size="260" fill="black" letter-spacing="2">iGAMING</text>
+      </mask>
+    </defs>
+    <rect width="100%" height="100%" fill="#FFD60A" mask="url(#introCut)"/>
+  </svg>
+  <div class="intro__tag">ISSUE 001 · LOADING</div>
+  <a href="#" class="intro__skip" id="introSkip">SKIP ▶</a>
+</div>
+
 <div class="progress" id="prog"></div>
 <div class="cursor" id="cur"></div>
 <div class="cursor-dot" id="curD"></div>
@@ -422,7 +483,7 @@ section{border-bottom:4px solid var(--ink);position:relative}
     </div>
 
     <h1 class="hero__title" id="heroTitle">
-      <span class="line"><span class="l1">iGAMING-ТРАФИК.</span></span>
+      <span class="line"><span class="l1"><span class="brand-bungee">iGAMING</span>-ТРАФИК.</span></span>
       <span class="line"><span class="l2">ОФФЕРЫ <span class="lilbet-mark" style="font-size:.85em;vertical-align:.08em">lil.bet</span>.</span></span>
       <span class="line l3-wrap"><span class="l3">ПО-ЧЕЛОВЕЧЕСКИ.</span></span>
     </h1>
@@ -869,6 +930,16 @@ section{border-bottom:4px solid var(--ink);position:relative}
 
 <script>
 (function(){
+  // ----- intro overlay dismissal -----
+  const intro = document.getElementById('intro');
+  const skip  = document.getElementById('introSkip');
+  function endIntro(){ document.body.classList.add('intro-done'); }
+  if(intro){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(endIntro, reduce ? 400 : 2900);
+    skip && skip.addEventListener('click', function(e){ e.preventDefault(); endIntro(); });
+  }
+
   // ----- build sunburst rays (24 wedges) -----
   function buildRays(target){
     const g = document.getElementById(target);
