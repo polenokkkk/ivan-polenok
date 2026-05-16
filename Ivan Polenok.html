@@ -113,8 +113,9 @@ section{border-bottom:4px solid var(--ink);position:relative}
 
 /* ─────────────────────────── TICKER ─────────────────────────── */
 .ticker{background:var(--ink);overflow:hidden;padding:24px 0;border-top:0}
-.ticker__track{display:flex;gap:42px;white-space:nowrap;animation:marquee 25s linear infinite;font-family:'Anton',sans-serif;font-size:clamp(36px,5vw,56px);text-transform:uppercase;line-height:1}
+.ticker__track{display:flex;white-space:nowrap;animation:marquee 16s linear infinite;font-family:'Anton',sans-serif;font-size:clamp(36px,5vw,56px);text-transform:uppercase;line-height:1;will-change:transform}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker__track > span{margin-right:42px;flex:0 0 auto}
 .ticker__track .w{color:var(--cream)}
 .ticker__track .w.out{-webkit-text-stroke:2px var(--yellow);color:transparent}
 .ticker__track .sym{color:var(--red)}
@@ -357,7 +358,8 @@ body.intro-done .intro{display:none}
   .stat__num[style]{font-size:26px !important;line-height:1.1;padding-top:10px}
   .scroll-hint{margin-top:34px;font-size:14px;padding:8px 12px}
   .ticker{padding:18px 0}
-  .ticker__track{font-size:34px;gap:28px}
+  .ticker__track{font-size:34px}
+  .ticker__track > span{margin-right:28px}
   .who__title,.paths__title,.how__title,.vibes__title{font-size:42px}
   .who__title .slab,.paths__title .slab,.how__title .yh,.vibes__title .yh{padding:0 14px;border-width:3px;box-shadow:6px 6px 0 var(--ink)}
   .who__body p{font-size:16px}
@@ -401,7 +403,8 @@ body.intro-done .intro{display:none}
   .who__title,.paths__title,.how__title,.vibes__title{font-size:36px}
   .contact__title{font-size:38px}
   .quote__text{font-size:26px}
-  .ticker__track{font-size:28px;gap:22px}
+  .ticker__track{font-size:28px}
+  .ticker__track > span{margin-right:22px}
 }
 
 /* selection */
@@ -969,7 +972,6 @@ body.intro-done .intro{display:none}
     ];
     let html='';
     for(let k=0;k<2;k++){
-      seq.forEach(([word,cls])=>{ html += `<span class="${cls}">${word}</span>`; });
       seq.forEach(([word,cls])=>{ html += `<span class="${cls}">${word}</span>`; });
     }
     t.innerHTML = html;
