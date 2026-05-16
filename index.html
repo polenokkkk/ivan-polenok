@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ivan Polenok · Affiliate Manager @ lil.bet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root{
+  --ink:#0A0A0A;
+  --yellow:#FFD60A;
+  --red:#E63946;
+  --cream:#FFF8E7;
+  --navy:#1D3557;
+  --shadow: 8px 8px 0 var(--ink);
+  --shadow-sm: 5px 5px 0 var(--ink);
+  --shadow-lg: 14px 14px 0 var(--ink);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+body{cursor:none}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0}
+
+/* ───────── HUD ───────── */
+.hud{position:fixed;top:18px;z-index:80;font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;font-size:13px;background:var(--ink);color:var(--yellow);padding:8px 14px;border:2px solid var(--ink);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px}
+.hud--l{left:18px}
+.hud--r{right:18px;background:var(--yellow);color:var(--ink)}
+.hud--r .dot{width:9px;height:9px;border-radius:50%;background:var(--red);border:1.5px solid var(--ink);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+
+/* ───── progress + cursor ───── */
+.progress{position:fixed;top:0;left:0;height:6px;width:0%;background:var(--yellow);border-bottom:2px solid var(--ink);z-index:200;transition:width .08s linear}
+.cursor,.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:300;border-radius:50%;mix-blend-mode:difference;will-change:transform}
+.cursor{width:24px;height:24px;border:1.5px solid var(--yellow);transition:width .18s ease,height .18s ease,background .18s ease,border-color .18s ease;transform:translate(-50%,-50%)}
+.cursor.is-hover{width:60px;height:60px;background:var(--yellow);border-color:var(--yellow)}
+.cursor-dot{width:5px;height:5px;background:var(--yellow);transform:translate(-50%,-50%)}
+
+/* ───── shared bits ───── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 48px;width:100%}
+section{border-bottom:4px solid var(--ink);position:relative}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:'Bebas Neue',sans-serif;letter-spacing:.12em;font-size:18px;padding:8px 16px;background:var(--ink);color:var(--yellow);border:2px solid var(--ink);box-shadow:var(--shadow-sm)}
+.badge--red{background:var(--red);color:var(--cream)}
+.badge--yellow{background:var(--yellow);color:var(--ink)}
+.badge--cream{background:var(--cream);color:var(--ink)}
+.tilt-l{transform:rotate(-1.5deg)}
+.tilt-r{transform:rotate(1.5deg)}
+
+.headline{font-family:'Anton',sans-serif;font-weight:400;line-height:.88;letter-spacing:-.005em;text-transform:uppercase}
+.stroke{-webkit-text-stroke:2.5px var(--ink);color:transparent}
+.hl-red{background:var(--red);color:var(--cream);padding:1px 8px;border:1.5px solid var(--ink);display:inline-block}
+.hl-yellow{background:var(--yellow);color:var(--ink);padding:1px 8px;border:1.5px solid var(--ink);display:inline-block}
+.red-slab{display:inline-block;background:var(--red);color:var(--cream);padding:0 16px;border:3px solid var(--ink);box-shadow:var(--shadow);transform:rotate(-2deg)}
+.yellow-slab{display:inline-block;background:var(--yellow);color:var(--ink);padding:0 16px;border:3px solid var(--ink);box-shadow:var(--shadow);transform:rotate(-1deg)}
+
+/* halftone texture */
+.halftone{background-image:radial-gradient(rgba(10,10,10,.28) 1.1px, transparent 1.6px);background-size:14px 14px;background-position:0 0}
+.halftone-light{background-image:radial-gradient(rgba(255,248,231,.28) 1px, transparent 1.4px);background-size:12px 12px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ─────────────────────────── HERO ─────────────────────────── */
+.hero{background:var(--yellow);min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 60px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(10,10,10,.18) 1.1px, transparent 1.6px);background-size:18px 18px;pointer-events:none;opacity:.55}
+.rays{position:absolute;inset:auto;top:50%;left:50%;width:1600px;height:1600px;transform:translate(-50%,-50%);pointer-events:none;opacity:.18;animation:spin 60s linear infinite;z-index:0}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+.hero__meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:42px;position:relative;z-index:2}
+
+.hero__title{font-family:'Anton',sans-serif;line-height:.85;letter-spacing:-.01em;text-transform:uppercase;position:relative;z-index:2}
+.hero__title .line{display:block;overflow:hidden}
+.hero__title .line span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.34,1.56,.64,1)}
+.hero.start .hero__title .line:nth-child(1) span{transition-delay:.1s}
+.hero.start .hero__title .line:nth-child(2) span{transition-delay:.22s}
+.hero.start .hero__title .line:nth-child(3) span{transition-delay:.34s}
+.hero.start .hero__title .line span{transform:translateY(0)}
+.hero__title .l1{font-size:clamp(70px,14vw,220px);color:var(--ink)}
+.hero__title .l2{font-size:clamp(70px,14vw,220px);-webkit-text-stroke:3.5px var(--ink);color:transparent}
+.hero__title .l3-wrap{margin-top:12px}
+.hero__title .l3{font-size:clamp(50px,9.5vw,150px);background:var(--red);color:var(--cream);padding:6px 24px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-2deg);display:inline-block}
+.hero__title.glitch .l1 span,.hero__title.glitch .l2 span,.hero__title.glitch .l3{animation:glitch 55ms steps(1) 0s 8}
+@keyframes glitch{
+  0%  {transform:translate(0,0) rotate(0)}
+  20% {transform:translate(-2px,1px) rotate(.2deg)}
+  40% {transform:translate(3px,-2px) rotate(-.4deg)}
+  60% {transform:translate(-1px,2px) rotate(.3deg)}
+  80% {transform:translate(2px,-1px) rotate(-.2deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+
+.bubble{position:absolute;top:120px;right:48px;background:var(--cream);border:3px solid var(--ink);padding:18px 22px;font-family:'Anton',sans-serif;font-size:24px;line-height:1.05;text-transform:uppercase;box-shadow:var(--shadow);transform:rotate(4deg);z-index:3;max-width:240px}
+.bubble::after{content:"";position:absolute;bottom:-22px;left:30px;width:0;height:0;border:14px solid transparent;border-top-color:var(--cream);border-bottom:0;filter:drop-shadow(0 3px 0 var(--ink))}
+.bubble::before{content:"";position:absolute;bottom:-28px;left:26px;width:0;height:0;border:18px solid transparent;border-top-color:var(--ink);border-bottom:0;z-index:-1}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;position:relative;z-index:2}
+.stat{background:var(--cream);border:3px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;transition:transform .25s ease, box-shadow .25s ease;transform:rotate(0)}
+.stat:nth-child(2){transform:rotate(-.8deg)}
+.stat:nth-child(3){transform:rotate(.8deg)}
+.stat:hover{transform:translate(-4px,-4px) rotate(0);box-shadow:var(--shadow-lg)}
+.stat__num{font-family:'Anton',sans-serif;font-size:64px;line-height:1;color:var(--red)}
+.stat__num small{font-size:32px;color:var(--ink)}
+.stat__lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;margin-top:6px;color:var(--ink)}
+
+.scroll-hint{display:inline-flex;gap:10px;align-items:center;margin-top:54px;font-family:'Bebas Neue',sans-serif;letter-spacing:.18em;font-size:16px;background:var(--ink);color:var(--yellow);padding:10px 16px;border:2px solid var(--ink);animation:bob 1.6s ease-in-out infinite;position:relative;z-index:2}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ─────────────────────────── TICKER ─────────────────────────── */
+.ticker{background:var(--ink);overflow:hidden;padding:24px 0;border-top:0}
+.ticker__track{display:flex;gap:42px;white-space:nowrap;animation:marquee 25s linear infinite;font-family:'Anton',sans-serif;font-size:clamp(36px,5vw,56px);text-transform:uppercase;line-height:1}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker__track .w{color:var(--cream)}
+.ticker__track .w.out{-webkit-text-stroke:2px var(--yellow);color:transparent}
+.ticker__track .sym{color:var(--red)}
+
+/* ─────────────────────── WHO IS THIS ─────────────────────── */
+.who{background:var(--cream);padding:120px 0;position:relative;overflow:hidden}
+.who__title{font-size:clamp(60px,11vw,140px);margin:18px 0 56px}
+.who__title .stroke{display:block}
+.who__title .slab{display:inline-block;background:var(--yellow);color:var(--ink);padding:0 22px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-1.4deg);margin-top:6px}
+.who__grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:start}
+.who__body p{font-size:18px;line-height:1.55;margin-bottom:22px;max-width:54ch}
+.polaroid{position:relative;background:var(--cream);padding:14px 14px 56px;border:3px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(2.5deg);justify-self:end;width:min(360px,100%)}
+.polaroid__caption{position:absolute;bottom:14px;left:14px;right:14px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.06em}
+.polaroid__caption .red{color:var(--red)}
+.sticker{position:absolute;top:-22px;right:-18px;background:var(--red);color:var(--cream);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;padding:8px 12px;border:3px solid var(--ink);transform:rotate(8deg);box-shadow:var(--shadow-sm)}
+
+/* ─────────────────────── PATHS ─────────────────────── */
+.paths{background:var(--navy);color:var(--cream);padding:120px 0;position:relative;overflow:hidden}
+.paths::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,248,231,.07) 1px, transparent 1.4px);background-size:14px 14px;pointer-events:none}
+.paths__title{font-size:clamp(60px,11vw,140px);margin:18px 0 56px}
+.paths__title .stroke-y{-webkit-text-stroke:3px var(--yellow);color:transparent;display:block}
+.paths__title .slab{display:inline-block;background:var(--red);color:var(--cream);padding:0 22px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-1.4deg);margin-top:6px}
+.row{display:block;padding:30px 0;border-top:3px solid var(--cream);position:relative;transition:padding-left .35s cubic-bezier(.2,.7,.3,1), background .35s ease}
+.row:last-child{border-bottom:3px solid var(--cream)}
+.row__head{display:flex;align-items:center;gap:24px;cursor:none}
+.row__bar{position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--yellow);transform:scaleY(0);transform-origin:top;transition:transform .35s ease}
+.row:hover{padding-left:32px}
+.row:hover .row__bar{transform:scaleY(1)}
+.row__lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.1em;padding:6px 12px;border:2px solid var(--cream);flex-shrink:0}
+.row__lbl.web{background:var(--ink);color:var(--yellow)}
+.row__lbl.am{background:var(--red);color:var(--cream)}
+.row__lbl.team{background:var(--ink);color:var(--cream)}
+.row__title{font-family:'Anton',sans-serif;font-size:clamp(34px,5vw,58px);line-height:.95;text-transform:uppercase;flex:1}
+.row__arrow{font-family:'Anton',sans-serif;font-size:48px;color:var(--yellow);transition:transform .3s ease}
+.row.open .row__arrow{transform:rotate(90deg)}
+.row__body{max-height:0;overflow:hidden;transition:max-height .5s ease;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:start}
+.row.open .row__body{max-height:600px}
+.row__body p{margin-top:24px;font-size:17px;line-height:1.55;max-width:50ch}
+.row__list{margin-top:24px;list-style:none}
+.row__list li{padding:8px 0;border-bottom:1px dashed rgba(255,248,231,.2);font-size:15px;display:flex;gap:10px}
+.row__list li::before{content:"⚡";color:var(--yellow)}
+.row__cta{margin-top:22px;display:inline-block;background:var(--yellow);color:var(--ink);font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;padding:14px 22px;border:3px solid var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease}
+.row__cta:hover{transform:translate(-3px,-3px);box-shadow:var(--shadow)}
+
+/* ─────────────────────── PULL QUOTE ─────────────────────── */
+.quote{background:var(--ink);color:var(--cream);padding:160px 0;position:relative;overflow:hidden;text-align:center}
+.quote__deco{position:absolute;font-family:'Anton',sans-serif;font-size:clamp(280px,40vw,520px);line-height:.7;opacity:.14;pointer-events:none}
+.quote__deco.l{top:-60px;left:-20px;color:var(--red)}
+.quote__deco.r{bottom:-100px;right:-30px;color:var(--yellow)}
+.quote__text{position:relative;font-family:'Anton',sans-serif;font-size:clamp(40px,7vw,90px);line-height:1;text-transform:uppercase;max-width:1100px;margin:0 auto}
+.quote__text .y{color:var(--yellow)}
+.quote__text .r-block{display:inline-block;background:var(--red);color:var(--cream);padding:0 18px;transform:rotate(-1deg);border:3px solid var(--cream);box-shadow:6px 6px 0 var(--cream)}
+.quote__sig{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin-top:36px;color:var(--yellow);position:relative}
+
+/* ─────────────────────── HOW ─────────────────────── */
+.how{background:var(--cream);padding:120px 0;position:relative}
+.how__title{font-size:clamp(60px,10vw,130px);margin:18px 0 56px}
+.how__title span{display:block}
+.how__title .yh{display:inline-block;background:var(--yellow);color:var(--ink);padding:0 22px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-1.2deg);margin-top:6px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.step{background:var(--cream);border:3px solid var(--ink);box-shadow:var(--shadow);padding:30px 28px 34px;transition:transform .25s ease, box-shadow .25s ease;position:relative}
+.step:nth-child(2){transform:rotate(-.8deg)}
+.step:nth-child(3){transform:rotate(.8deg)}
+.step:hover{transform:translate(-3px,-3px) rotate(0);box-shadow:var(--shadow-lg)}
+.step__num{font-family:'Anton',sans-serif;font-style:italic;font-size:64px;color:var(--red);line-height:.9}
+.step__title{font-family:'Anton',sans-serif;font-size:30px;text-transform:uppercase;margin:6px 0 12px}
+.step__text{font-size:16px;line-height:1.55}
+
+/* ─────────────────────── VIBES ─────────────────────── */
+.vibes{background:var(--red);color:var(--cream);padding:120px 0;position:relative;overflow:hidden}
+.vibes::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,248,231,.22) 1.1px, transparent 1.6px);background-size:14px 14px;opacity:.6;pointer-events:none}
+.vibes__title{font-size:clamp(58px,10vw,130px);margin:18px 0 22px;position:relative}
+.vibes__title span{display:block;color:var(--cream)}
+.vibes__title .yh{display:inline-block;background:var(--yellow);color:var(--ink);padding:0 22px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-1deg)}
+.vibes__intro{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.4vw,30px);letter-spacing:.06em;line-height:1.2;max-width:560px;margin:0 0 56px;position:relative;color:var(--cream)}
+.vibes__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;position:relative}
+.vibe{background:var(--cream);color:var(--ink);border:3px solid var(--ink);box-shadow:var(--shadow);padding:30px 30px 34px;position:relative;transition:transform .3s ease, box-shadow .3s ease}
+.vibe:nth-child(1){transform:rotate(-1deg)}
+.vibe:nth-child(2){transform:rotate(1deg)}
+.vibe:nth-child(3){transform:rotate(1deg)}
+.vibe:nth-child(4){transform:rotate(-1deg)}
+.vibe:hover{transform:rotate(0) translate(-4px,-4px);box-shadow:8px 8px 0 var(--yellow), 0 0 0 3px var(--ink)}
+.vibe__icon{font-family:'Anton',sans-serif;font-size:80px;color:var(--red);line-height:.9}
+.vibe__title{font-family:'Anton',sans-serif;font-size:30px;text-transform:uppercase;line-height:1;margin:8px 0 14px}
+.vibe__title .yh{background:var(--yellow);color:var(--ink);padding:0 8px;border:1.5px solid var(--ink);display:inline-block}
+.vibe__text{font-size:14px;line-height:1.55}
+.vibe__burst{position:absolute;top:-22px;right:-22px;width:60px;height:60px}
+
+/* ─────────────────────── CONTACT ─────────────────────── */
+.contact{background:var(--yellow);padding:130px 0 100px;position:relative;overflow:hidden;text-align:center}
+.contact .rays{opacity:.12}
+.contact__title{font-family:'Anton',sans-serif;font-size:clamp(60px,12vw,180px);text-transform:uppercase;line-height:.9;margin:24px 0 48px;position:relative;z-index:2}
+.contact__title .l1{display:block;-webkit-text-stroke:3px var(--ink);color:transparent}
+.contact__title .l2{display:inline-block;background:var(--red);color:var(--cream);padding:0 24px;border:4px solid var(--ink);box-shadow:var(--shadow-lg);transform:rotate(-2deg);margin-top:10px}
+.cta-magnet{display:inline-block;background:var(--ink);color:var(--yellow);font-family:'Anton',sans-serif;font-size:32px;text-transform:uppercase;letter-spacing:.02em;padding:28px 50px;border:4px solid var(--ink);box-shadow:10px 10px 0 var(--red);transition:box-shadow .25s ease, background .25s ease, color .25s ease;position:relative;z-index:2;will-change:transform}
+.cta-magnet:hover{background:var(--red);color:var(--cream);box-shadow:16px 16px 0 var(--ink)}
+.channels{display:flex;justify-content:center;gap:18px;margin:50px 0 30px;flex-wrap:wrap;position:relative;z-index:2}
+.channel{background:var(--cream);color:var(--ink);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;padding:14px 22px;border:3px solid var(--ink);box-shadow:var(--shadow-sm);transition:background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease}
+.channel:hover{background:var(--red);color:var(--cream);transform:translate(-3px,-3px);box-shadow:var(--shadow)}
+.channel small{display:block;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.02em;opacity:.7;margin-top:2px;text-transform:none}
+.contact:hover .channel small{opacity:1}
+.ps{font-family:'Space Grotesk',sans-serif;font-size:11px;line-height:1.6;max-width:640px;margin:30px auto 0;letter-spacing:.04em;opacity:.85;position:relative;z-index:2}
+
+/* ─────────────────────── FOOTER ─────────────────────── */
+.foot{background:var(--ink);color:var(--cream);border-top:4px solid var(--yellow);padding:28px 0;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em}
+.foot__row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:16px}
+.foot__mid{font-family:'Anton',sans-serif;font-size:30px;color:var(--yellow);letter-spacing:.02em}
+
+/* ─────────── decorative bursts ─────────── */
+.burst{position:absolute;pointer-events:none}
+.burst--hero1{top:18%;right:8%;width:90px;animation:wob 4s ease-in-out infinite}
+.burst--hero2{bottom:22%;left:6%;width:70px;animation:wob 5s ease-in-out infinite reverse}
+@keyframes wob{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
+
+/* ─────────── lil.bet co-brand + sfx + motto ─────────── */
+.lilbet-mark{font-family:'Anton',sans-serif;font-weight:400;background:var(--ink);color:var(--yellow);padding:0 8px;border:1.5px solid var(--ink);font-style:normal;letter-spacing:-.01em;display:inline-block}
+.team-up{display:inline-flex;align-items:center;gap:6px;margin-top:34px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;background:var(--ink);color:var(--cream);padding:10px 16px;border:3px solid var(--ink);box-shadow:var(--shadow-sm);text-transform:uppercase;position:relative;z-index:2}
+.team-up .x{color:var(--red);font-family:'Anton',sans-serif;font-size:22px;line-height:1}
+.badge .lilbet-mark{background:var(--yellow);color:var(--ink);border-color:var(--ink);padding:0 6px;margin-left:4px;font-size:16px}
+.motto{display:inline-block;background:var(--ink);color:var(--yellow);padding:8px 14px;font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;line-height:1.05;border:3px solid var(--ink);box-shadow:var(--shadow-sm);transform:rotate(-1deg)}
+
+.sfx{position:absolute;pointer-events:none;z-index:4}
+.sfx--hero{top:58%;right:5%;width:150px;animation:wob 3.4s ease-in-out infinite}
+.sfx--who{top:38px;right:30px;width:120px;transform:rotate(8deg)}
+.sfx--vibes{top:30px;right:30px;width:120px;transform:rotate(-10deg);z-index:3}
+.sfx--contact{top:90px;left:7%;width:110px;transform:rotate(-14deg)}
+
+/* ─────────── COMIC STRIP ─────────── */
+.strip{background:var(--cream);padding:90px 0;position:relative;overflow:hidden}
+.strip::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(10,10,10,.08) 1px, transparent 1.4px);background-size:14px 14px;pointer-events:none}
+.strip__bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;gap:18px;flex-wrap:wrap;position:relative}
+.strip__title{font-family:'Anton',sans-serif;font-size:clamp(30px,4.2vw,52px);text-transform:uppercase;line-height:1}
+.strip__title em{font-style:normal;background:var(--yellow);padding:0 10px;border:3px solid var(--ink);display:inline-block;transform:rotate(-1deg);box-shadow:var(--shadow-sm)}
+.strip__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
+.panel{position:relative;background:var(--cream);border:4px solid var(--ink);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s ease, box-shadow .3s ease}
+.panel:nth-child(1){transform:rotate(-1.2deg)}
+.panel:nth-child(2){transform:rotate(.6deg)}
+.panel:nth-child(3){transform:rotate(-.6deg)}
+.panel:hover{transform:rotate(0) translate(-3px,-3px)}
+.panel__art{position:relative;aspect-ratio:1/1;overflow:hidden}
+.panel__art > svg{position:absolute;inset:0;width:100%;height:100%}
+.panel__bubble{position:absolute;font-family:'Anton',sans-serif;font-size:clamp(14px,1.6vw,20px);line-height:1.02;text-transform:uppercase;background:var(--cream);border:3px solid var(--ink);padding:8px 12px;box-shadow:var(--shadow-sm);max-width:62%;z-index:3;border-radius:18px 18px 18px 4px}
+.panel__bubble--tl{top:14px;left:14px;transform:rotate(-3deg)}
+.panel__bubble--tr{top:14px;right:14px;transform:rotate(3deg);border-radius:18px 18px 4px 18px}
+.panel__bubble--br{bottom:14px;right:14px;transform:rotate(-2deg);border-radius:18px 18px 4px 18px}
+.panel__bubble::after{content:"";position:absolute;width:14px;height:14px;background:var(--cream);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+.panel__bubble--tl::after{bottom:-10px;left:18px;transform:rotate(45deg)}
+.panel__bubble--tr::after{bottom:-10px;right:18px;transform:rotate(45deg)}
+.panel__bubble--br::after{top:-10px;right:18px;transform:rotate(-135deg)}
+.panel__caption{background:var(--ink);color:var(--yellow);padding:14px 18px;font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;font-size:18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel__caption .num{color:var(--red);font-family:'Anton',sans-serif;font-size:22px}
+.panel__sfx{position:absolute;width:80px;z-index:2}
+.panel__sfx svg{display:block}
+
+@media (max-width:900px){
+  .strip__grid{grid-template-columns:1fr}
+  .panel__art > svg{width:100% !important;height:100% !important}
+}
+
+/* ─────────── responsive ─────────── */
+@media (max-width:900px){
+  body{cursor:auto}
+  .cursor,.cursor-dot{display:none}
+  a,button,.row__head{cursor:pointer}
+  .hud{display:none}
+  .wrap{padding:0 22px}
+  .hero{padding:70px 0 50px;min-height:auto}
+  .hero__meta{flex-direction:column;gap:12px;align-items:flex-start}
+  .hero__title .l1,.hero__title .l2{font-size:clamp(44px,12vw,90px)}
+  .hero__title .l3{font-size:clamp(32px,8.6vw,70px)}
+  .bubble{position:relative;top:auto;right:auto;margin:14px 0 0 auto;transform:rotate(2deg);max-width:240px;font-size:18px}
+  .stats{grid-template-columns:1fr;gap:16px;margin-top:38px}
+  .stat__num{font-size:48px}
+  .stat__num small{font-size:24px}
+  .who,.paths,.quote,.how,.vibes,.contact,.strip{padding:70px 0}
+  .who__title,.paths__title,.how__title,.vibes__title{font-size:clamp(40px,10vw,80px)}
+  .who__grid{grid-template-columns:1fr;gap:36px}
+  .polaroid{justify-self:start;width:100%;max-width:360px}
+  .row__head{flex-direction:column;align-items:flex-start;gap:10px}
+  .row__title{font-size:clamp(28px,7vw,48px)}
+  .row__body{grid-template-columns:1fr;gap:18px}
+  .steps,.vibes__grid,.strip__grid{grid-template-columns:1fr}
+  .quote{padding:90px 0}
+  .quote__text{font-size:clamp(28px,6.5vw,56px)}
+  .quote__deco{font-size:240px}
+  .contact__title{font-size:clamp(44px,11vw,100px)}
+  .channels{flex-direction:column;align-items:stretch;gap:12px}
+  .sfx--hero,.sfx--who,.sfx--vibes,.sfx--contact{display:none}
+}
+@media (max-width:500px){
+  .wrap{padding:0 14px}
+  .hero{padding:60px 0 40px}
+  .badge{font-size:13px;padding:6px 10px;letter-spacing:.08em}
+  .progress{height:4px}
+  .hero__meta{margin-bottom:24px}
+  .bubble{font-size:15px;padding:12px 14px;max-width:200px}
+  .hero__title .l1,.hero__title .l2{font-size:46px;-webkit-text-stroke-width:2.2px}
+  .hero__title .l3{font-size:34px;padding:4px 12px;border-width:3px;box-shadow:6px 6px 0 var(--ink)}
+  .stats{margin-top:30px}
+  .stat{padding:18px 20px}
+  .stat__num{font-size:40px}
+  .stat__num[style]{font-size:26px !important;line-height:1.1;padding-top:10px}
+  .scroll-hint{margin-top:34px;font-size:14px;padding:8px 12px}
+  .ticker{padding:18px 0}
+  .ticker__track{font-size:34px;gap:28px}
+  .who__title,.paths__title,.how__title,.vibes__title{font-size:42px}
+  .who__title .slab,.paths__title .slab,.how__title .yh,.vibes__title .yh{padding:0 14px;border-width:3px;box-shadow:6px 6px 0 var(--ink)}
+  .who__body p{font-size:16px}
+  .motto{font-size:18px;padding:6px 10px}
+  .row{padding:22px 0}
+  .row__title{font-size:28px}
+  .row__lbl{font-size:14px;padding:5px 10px}
+  .row__arrow{font-size:36px}
+  .row__cta{font-size:18px;padding:12px 18px}
+  .quote{padding:80px 0}
+  .quote__text{font-size:30px;line-height:1.04}
+  .quote__deco{font-size:200px}
+  .step{padding:22px 22px 26px}
+  .step__num{font-size:48px}
+  .step__title{font-size:24px}
+  .step__text{font-size:15px}
+  .vibe{padding:24px 22px 28px}
+  .vibe__icon{font-size:60px}
+  .vibe__title{font-size:24px}
+  .vibes__intro{font-size:18px}
+  .contact{padding:90px 0 70px}
+  .contact__title{font-size:46px}
+  .cta-magnet{font-size:22px;padding:18px 26px;box-shadow:6px 6px 0 var(--red);border-width:3px}
+  .cta-magnet:hover{box-shadow:10px 10px 0 var(--ink)}
+  .channel{font-size:18px;padding:12px 16px;letter-spacing:.06em}
+  .channel small{font-size:11px}
+  .team-up{font-size:13px;padding:8px 12px;flex-wrap:wrap;justify-content:center}
+  .ps{font-size:11px;padding:0 4px}
+  .strip{padding:60px 0}
+  .strip__title{font-size:26px}
+  .panel__bubble{font-size:14px;padding:6px 10px;max-width:64%}
+  .panel__caption{font-size:14px;padding:10px 14px}
+  .panel__caption .num{font-size:18px}
+  .foot__row{font-size:12px;gap:10px;justify-content:center;text-align:center}
+  .foot__mid{font-size:22px}
+}
+@media (max-width:360px){
+  .wrap{padding:0 12px}
+  .hero__title .l1,.hero__title .l2{font-size:40px}
+  .hero__title .l3{font-size:28px}
+  .who__title,.paths__title,.how__title,.vibes__title{font-size:36px}
+  .contact__title{font-size:38px}
+  .quote__text{font-size:26px}
+  .ticker__track{font-size:28px;gap:22px}
+}
+
+/* selection */
+::selection{background:var(--ink);color:var(--yellow)}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+<div class="cursor" id="cur"></div>
+<div class="cursor-dot" id="curD"></div>
+
+<div class="hud hud--l">#001 · AFFILIATE MANAGER</div>
+<div class="hud hud--r"><span class="dot"></span>★ lil.bet · YEREVAN</div>
+
+<!-- ─────────────── HERO ─────────────── -->
+<section class="hero" id="hero">
+  <svg class="rays" viewBox="0 0 800 800" aria-hidden="true">
+    <g fill="#0A0A0A">
+      <!-- 24 wedge rays -->
+      <g id="raysG"></g>
+    </g>
+  </svg>
+
+  <!-- burst decorations -->
+  <svg class="burst burst--hero1" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#E63946" stroke="#0A0A0A" stroke-width="3"/>
+  </svg>
+  <svg class="burst burst--hero2" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#FFF8E7" stroke="#0A0A0A" stroke-width="3"/>
+  </svg>
+
+  <div class="wrap">
+    <div class="hero__meta">
+      <div class="badge">★ AFFILIATE MANAGER × <span class="lilbet-mark">lil.bet</span></div>
+      <div class="badge badge--red">VOL. 05 · 2026</div>
+    </div>
+
+    <div class="bubble" id="bubble">ПРИВЕТ.<br>Я ИВАН.<br>ДАВАЙ ЗНАКОМИТЬСЯ.</div>
+
+    <svg class="sfx sfx--hero" viewBox="0 0 220 140" aria-hidden="true">
+      <polygon points="110,4 132,40 196,30 156,70 200,128 122,98 88,138 78,92 12,118 50,76 4,46 70,46" fill="#FFD60A" stroke="#0A0A0A" stroke-width="4"/>
+      <text x="110" y="82" text-anchor="middle" font-family="Anton, sans-serif" font-size="40" fill="#0A0A0A">POW!</text>
+    </svg>
+
+    <h1 class="hero__title" id="heroTitle">
+      <span class="line"><span class="l1">ТРАФИК.</span></span>
+      <span class="line"><span class="l2">ОФФЕРЫ.</span></span>
+      <span class="line l3-wrap"><span class="l3">ПО-ЧЕЛОВЕЧЕСКИ.</span></span>
+    </h1>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__num"><span data-count="5">0</span></div>
+        <div class="stat__lbl">ЛЕТ В АФФИЛЕЙТЕ</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num"><span data-count="8">0</span><small>+</small></div>
+        <div class="stat__lbl">СТРИМОВ ДЛЯ ВЕБОВ</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num" style="font-size:36px;line-height:1.05;padding-top:18px">CIS + AFRICA</div>
+        <div class="stat__lbl">GEO-ФОКУС</div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">↓ SCROLL ON ↓</div>
+  </div>
+</section>
+
+<!-- ─────────────── TICKER ─────────────── -->
+<section class="ticker" aria-hidden="true">
+  <div class="ticker__track" id="tickerTrack"></div>
+</section>
+
+<!-- ─────────────── WHO ─────────────── -->
+<section class="who" id="who">
+  <svg class="sfx sfx--who" viewBox="0 0 220 140" aria-hidden="true">
+    <polygon points="110,4 132,40 196,30 156,70 200,128 122,98 88,138 78,92 12,118 50,76 4,46 70,46" fill="#E63946" stroke="#0A0A0A" stroke-width="4"/>
+    <text x="110" y="86" text-anchor="middle" font-family="Anton, sans-serif" font-size="44" fill="#FFF8E7">BAM!</text>
+  </svg>
+  <div class="wrap">
+    <div class="badge badge--red tilt-l reveal">★ ORIGIN STORY ★</div>
+    <h2 class="who__title headline reveal">
+      <span class="stroke">КТО ЭТОТ</span>
+      <span class="slab">ПАРЕНЬ?</span>
+    </h2>
+
+    <div class="who__grid">
+      <div class="who__body reveal">
+        <p>5 лет в аффилейте. Начал с 18-ти — понял, что этому рынку нужен <span class="hl-red">герой</span>. Теперь я тут.</p>
+        <p>Я Affiliate Manager в <strong class="lilbet-mark">lil.bet</strong> — прямой iGaming-рекламодатель с фокусом на CIS и Африку. Здесь моя команда, мои вебы, мой продукт. Заливаем <em>вместе</em> — это история надолго.</p>
+        <p>Сам лил трафик с Meta, TikTok, Telegram, PWA — знаю трафик изнутри. Провёл 8+ стримов для вебмастеров. Объясняю без скриптов и тикетов.</p>
+        <p class="motto">«Чем больше трафик — тем больше ответственность.»</p>
+        <p>Живу в Ереване. Играю в падел. Люблю <span class="hl-yellow">сёрфинг</span>, путешествия и хорошие разговоры не через тикет&nbsp;#47291.</p>
+      </div>
+
+      <div class="polaroid reveal">
+        <div class="sticker">★ THE HERO ★</div>
+        <!-- silhouette portrait -->
+        <svg viewBox="0 0 300 320" width="100%" aria-label="Portrait placeholder">
+          <defs>
+            <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+              <stop offset="0%" stop-color="#FFD60A"/>
+              <stop offset="100%" stop-color="#E63946"/>
+            </radialGradient>
+            <pattern id="dots" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="#0A0A0A" opacity=".35"/>
+            </pattern>
+          </defs>
+          <rect width="300" height="320" fill="url(#bg)"/>
+          <!-- wedge rays from center -->
+          <g opacity=".25" fill="#0A0A0A">
+            <polygon points="150,150 0,40 0,90"/>
+            <polygon points="150,150 0,140 0,180"/>
+            <polygon points="150,150 0,230 0,270"/>
+            <polygon points="150,150 80,320 130,320"/>
+            <polygon points="150,150 180,320 230,320"/>
+            <polygon points="150,150 300,270 300,230"/>
+            <polygon points="150,150 300,180 300,140"/>
+            <polygon points="150,150 300,90 300,50"/>
+            <polygon points="150,150 220,0 170,0"/>
+            <polygon points="150,150 120,0 70,0"/>
+          </g>
+          <rect width="300" height="320" fill="url(#dots)"/>
+
+          <!-- shoulders -->
+          <path d="M40 320 L80 220 Q150 200 220 220 L260 320 Z" fill="#0A0A0A"/>
+          <!-- neck -->
+          <rect x="135" y="180" width="30" height="40" fill="#0A0A0A"/>
+          <!-- head -->
+          <ellipse cx="150" cy="130" rx="55" ry="62" fill="#0A0A0A"/>
+          <!-- hair crown -->
+          <path d="M95 110 Q100 70 130 65 Q150 50 175 70 Q205 75 208 115 Q190 95 170 100 Q150 88 130 100 Q110 96 95 110 Z" fill="#0A0A0A"/>
+
+          <!-- glasses bridge -->
+          <line x1="138" y1="132" x2="162" y2="132" stroke="#FFF8E7" stroke-width="2.5"/>
+          <!-- left lens -->
+          <circle cx="128" cy="134" r="14" fill="#FFF8E7" stroke="#FFF8E7" stroke-width="3"/>
+          <circle cx="128" cy="134" r="12" fill="#0A0A0A"/>
+          <circle cx="124" cy="130" r="3.5" fill="#FFF8E7"/>
+          <!-- right lens -->
+          <circle cx="172" cy="134" r="14" fill="#FFF8E7" stroke="#FFF8E7" stroke-width="3"/>
+          <circle cx="172" cy="134" r="12" fill="#0A0A0A"/>
+          <circle cx="168" cy="130" r="3.5" fill="#FFF8E7"/>
+
+          <!-- collar accents -->
+          <path d="M130 220 L150 250 L170 220" stroke="#FFF8E7" stroke-width="3" fill="none"/>
+
+          <!-- action lines -->
+          <g stroke="#0A0A0A" stroke-width="2" opacity=".55" fill="none">
+            <line x1="20" y1="100" x2="60" y2="120"/>
+            <line x1="20" y1="160" x2="65" y2="160"/>
+            <line x1="280" y1="100" x2="240" y2="120"/>
+            <line x1="280" y1="160" x2="235" y2="160"/>
+            <line x1="40" y1="40" x2="80" y2="80"/>
+            <line x1="260" y1="40" x2="220" y2="80"/>
+          </g>
+
+          <text x="150" y="305" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="13" fill="#FFF8E7" letter-spacing="2">YEREVAN · iGAMING · 2026</text>
+        </svg>
+        <div class="polaroid__caption">IVAN, <span class="red">THE AFFILIATE MANAGER</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── COMIC STRIP ─────────────── -->
+<section class="strip" id="strip">
+  <div class="wrap">
+    <div class="strip__bar reveal">
+      <div class="strip__title">MEANWHILE… <em>THE ORIGIN STRIP</em></div>
+      <div class="badge badge--red">lil.bet × IVAN · ISSUE 001</div>
+    </div>
+    <div class="strip__grid reveal">
+      <article class="panel">
+        <div class="panel__art">
+          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <radialGradient id="p1bg" cx="50%" cy="40%" r="80%">
+                <stop offset="0%" stop-color="#FFD60A"/>
+                <stop offset="100%" stop-color="#E63946"/>
+              </radialGradient>
+              <pattern id="p1dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="1.2" fill="#0A0A0A" opacity=".24"/>
+              </pattern>
+            </defs>
+            <rect width="400" height="400" fill="url(#p1bg)"/>
+            <g opacity=".3" fill="#0A0A0A">
+              <polygon points="200,210 0,80 0,140"/>
+              <polygon points="200,210 0,280 0,340"/>
+              <polygon points="200,210 400,140 400,80"/>
+              <polygon points="200,210 400,340 400,280"/>
+            </g>
+            <rect width="400" height="400" fill="url(#p1dots)"/>
+            <text x="60" y="110" font-family="Anton, sans-serif" font-size="56" fill="#0A0A0A">$</text>
+            <text x="320" y="130" font-family="Anton, sans-serif" font-size="44" fill="#0A0A0A">$</text>
+            <text x="50" y="260" font-family="Anton, sans-serif" font-size="40" fill="#0A0A0A">$</text>
+            <ellipse cx="200" cy="190" rx="50" ry="56" fill="#0A0A0A"/>
+            <path d="M120 400 L160 290 Q200 270 240 290 L280 400 Z" fill="#0A0A0A"/>
+            <rect x="155" y="288" width="90" height="54" fill="#0A0A0A" stroke="#FFD60A" stroke-width="3"/>
+            <rect x="150" y="340" width="100" height="7" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2"/>
+            <text x="200" y="322" text-anchor="middle" font-family="Anton, sans-serif" font-size="24" fill="#FFD60A">$$$</text>
+            <circle cx="186" cy="188" r="11" fill="#0A0A0A" stroke="#FFF8E7" stroke-width="2.5"/>
+            <circle cx="214" cy="188" r="11" fill="#0A0A0A" stroke="#FFF8E7" stroke-width="2.5"/>
+            <line x1="197" y1="188" x2="203" y2="188" stroke="#FFF8E7" stroke-width="2"/>
+            <circle cx="183" cy="185" r="3" fill="#FFF8E7"/>
+            <circle cx="211" cy="185" r="3" fill="#FFF8E7"/>
+            <g stroke="#0A0A0A" stroke-width="2" opacity=".5" fill="none">
+              <line x1="110" y1="180" x2="140" y2="190"/>
+              <line x1="260" y1="190" x2="290" y2="180"/>
+            </g>
+          </svg>
+          <div class="panel__bubble panel__bubble--tl">ХМ.<br>ИНТЕРЕСНО…</div>
+        </div>
+        <div class="panel__caption"><span><span class="num">01</span>&nbsp;· 2021 · FIRST FLOW</span><span>☛</span></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__art">
+          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <pattern id="p2dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="1.2" fill="#FFF8E7" opacity=".25"/>
+              </pattern>
+            </defs>
+            <rect width="400" height="400" fill="#E63946"/>
+            <g opacity=".25" fill="#FFF8E7">
+              <polygon points="200,200 0,60 0,120"/>
+              <polygon points="200,200 0,280 0,340"/>
+              <polygon points="200,200 400,120 400,60"/>
+              <polygon points="200,200 400,340 400,280"/>
+              <polygon points="200,200 130,400 170,400"/>
+              <polygon points="200,200 230,400 270,400"/>
+            </g>
+            <rect width="400" height="400" fill="url(#p2dots)"/>
+            <polygon points="60,130 95,130 78,160 108,160 70,210 84,175 52,175" fill="#FFD60A" stroke="#0A0A0A" stroke-width="3"/>
+            <polygon points="340,130 305,130 322,160 292,160 330,210 316,175 348,175" fill="#FFD60A" stroke="#0A0A0A" stroke-width="3"/>
+            <ellipse cx="200" cy="170" rx="52" ry="60" fill="#0A0A0A"/>
+            <path d="M100 400 L140 250 Q200 230 260 250 L300 400 Z" fill="#0A0A0A"/>
+            <path d="M104 250 L70 290 L82 348 L122 326 Z" fill="#0A0A0A"/>
+            <path d="M296 250 L330 290 L318 348 L278 326 Z" fill="#0A0A0A"/>
+            <circle cx="186" cy="170" r="12" fill="#0A0A0A" stroke="#FFD60A" stroke-width="3"/>
+            <circle cx="214" cy="170" r="12" fill="#0A0A0A" stroke="#FFD60A" stroke-width="3"/>
+            <line x1="198" y1="170" x2="202" y2="170" stroke="#FFD60A" stroke-width="2"/>
+            <g font-family="Bebas Neue, sans-serif" font-size="15" fill="#FFD60A" letter-spacing="1">
+              <rect x="22" y="38" width="66" height="22" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2"/>
+              <text x="55" y="54" text-anchor="middle">META</text>
+              <rect x="312" y="38" width="66" height="22" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2"/>
+              <text x="345" y="54" text-anchor="middle">PWA</text>
+              <rect x="22" y="352" width="82" height="22" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2"/>
+              <text x="63" y="368" text-anchor="middle">TIKTOK</text>
+              <rect x="298" y="352" width="82" height="22" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2"/>
+              <text x="339" y="368" text-anchor="middle">TELEGRAM</text>
+            </g>
+          </svg>
+          <div class="panel__bubble panel__bubble--br">ЭТОМУ РЫНКУ<br>НУЖЕН ГЕРОЙ.</div>
+        </div>
+        <div class="panel__caption"><span><span class="num">02</span>&nbsp;· 2023 · POWER UP</span><span>⚡</span></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__art">
+          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="width: 424px;">
+            <defs>
+              <pattern id="p3dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="1.2" fill="#FFD60A" opacity=".18"/>
+              </pattern>
+            </defs>
+            <rect width="400" height="400" fill="#1D3557"/>
+            <g opacity=".22" fill="#FFD60A">
+              <polygon points="200,200 0,80 0,140"/>
+              <polygon points="200,200 0,280 0,340"/>
+              <polygon points="200,200 400,140 400,80"/>
+              <polygon points="200,200 400,340 400,280"/>
+            </g>
+            <rect width="400" height="400" fill="url(#p3dots)"/>
+            <polygon points="200,60 222,160 318,138 256,210 332,272 232,260 244,358 200,278 156,358 168,260 68,272 144,210 82,138 178,160" fill="#FFD60A" stroke="#0A0A0A" stroke-width="4"/>
+            <text x="200" y="172" text-anchor="middle" font-family="Anton, sans-serif" font-size="48" fill="#0A0A0A" letter-spacing="-1">lil.bet</text>
+            <text x="200" y="220" text-anchor="middle" font-family="Anton, sans-serif" font-size="38" fill="#E63946">×</text>
+            <text x="200" y="272" text-anchor="middle" font-family="Anton, sans-serif" font-size="48" fill="#0A0A0A">IVAN</text>
+            <rect x="118" y="316" width="164" height="30" fill="#0A0A0A" stroke="#FFD60A" stroke-width="2.5"/>
+            <text x="200" y="337" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="17" fill="#FFD60A" letter-spacing="3">TEAM ASSEMBLED</text>
+          </svg>
+          <div class="panel__bubble panel__bubble--tr">ПОЕХАЛИ<br>ВМЕСТЕ.</div>
+        </div>
+        <div class="panel__caption"><span>03 · 2026 · TEAM-UP</span><span>★</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PATHS ─────────────── -->
+<section class="paths" id="paths">
+  <div class="wrap">
+    <div class="badge badge--yellow tilt-l reveal">★ CHOOSE YOUR PATH ★</div>
+    <h2 class="paths__title headline reveal">
+      <span class="stroke-y">ТЫ КТО</span>
+      <span class="slab">В ЭТОЙ ИСТОРИИ?</span>
+    </h2>
+
+    <div class="rows">
+      <article class="row reveal" data-row>
+        <span class="row__bar"></span>
+        <div class="row__head">
+          <span class="row__lbl web">⚡ ВЕБ-МАСТЕР</span>
+          <h3 class="row__title">ЛЬЁШЬ ТРАФИК?</h3>
+          <span class="row__arrow">→</span>
+        </div>
+        <div class="row__body">
+          <p>Работаем по-человечески: еженедельные выплаты от $30 в USDT, ответ в Telegram за часы, не через тикет. Принимаем трафик из CIS и Африки — SEO, Meta, PWA, ASO, Telegram, Influence, tipsters.</p>
+          <ul class="row__list">
+            <li>Weekly USDT payouts from $30</li>
+            <li>SEO / Meta / PWA / Telegram / ASO</li>
+            <li>GEO: RU, KZ, UZ, EGY, BD, PK, AZ и др.</li>
+            <li>Личный AM — без тикет-системы</li>
+            <li>Письменные гарантии перед стартом</li>
+            <li><a class="row__cta" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">→ ПИШЕМ В TELEGRAM</a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="row reveal" data-row>
+        <span class="row__bar"></span>
+        <div class="row__head">
+          <span class="row__lbl am">★ AFFILIATE MANAGER</span>
+          <h3 class="row__title">ТВОЙ ВЕБ ИЩЕТ ОФФЕР?</h3>
+          <span class="row__arrow">→</span>
+        </div>
+        <div class="row__body">
+          <p>Если твой партнёр ищет хороший CIS/Africa-оффер с криптовыплатами — познакомь нас. Обращусь с уважением, решу вопрос, ты получишь довольного партнёра.</p>
+          <ul class="row__list">
+            <li>Прямой advertiser — не сетка</li>
+            <li>CIS + Африка, список GEO расширяется</li>
+            <li>Ответ в часы, а не в дни</li>
+            <li>Реферальный процент за нового партнёра</li>
+            <li><a class="row__cta" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">→ ПОЗНАКОМЬ НАС</a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="row reveal" data-row>
+        <span class="row__bar"></span>
+        <div class="row__head">
+          <span class="row__lbl team">⚡ ИЗ ИНДУСТРИИ</span>
+          <h3 class="row__title">ПРОСТО ВСТРЕТИЛИСЬ НА КОНФЕ?</h3>
+          <span class="row__arrow">→</span>
+        </div>
+        <div class="row__body">
+          <p>Провайдер, платёжка, софт, медиа, ивент-агентство, журналист, другой продукт? Будем знакомы. Я в индустрии 5 лет и любопытный по жизни — расскажу что вижу в РУ/CIS/Africa, познакомлю с кем нужно, не упускаю интересных людей.</p>
+          <ul class="row__list">
+            <li>SiGMA / MAC / G GATE / AWA — бываю лично</li>
+            <li>Открыт к выступлениям</li>
+            <li>Свяжу с нужными людьми из моей сети</li>
+            <li>Интересные коллабы и пилоты — обсуждаем</li>
+            <li>Просто поболтать о рынке — всегда «да»</li>
+            <li><a class="row__cta" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">→ НАПИШИ</a></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PULL QUOTE ─────────────── -->
+<section class="quote">
+  <span class="quote__deco l">“</span>
+  <span class="quote__deco r">”</span>
+  <div class="wrap">
+    <p class="quote__text reveal">
+      МОЯ ЗАДАЧА —<br>
+      <span class="y">НЕ «НАЛИТЬ».</span><br>
+      МОЯ ЗАДАЧА —<br>
+      СДЕЛАТЬ ТАК, ЧТОБЫ<br>
+      <span class="r-block">ТЫ ЗАХОТЕЛ ПОВТОРИТЬ.</span>
+    </p>
+    <p class="quote__sig reveal">— manifesto · 2026</p>
+  </div>
+</section>
+
+<!-- ─────────────── HOW ─────────────── -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="badge badge--red tilt-r reveal">★ КАК ЭТО РАБОТАЕТ ★</div>
+    <h2 class="how__title headline reveal">
+      <span>ПРОСТО.</span>
+      <span class="yh">ЗА ТРИ ШАГА.</span>
+    </h2>
+
+    <div class="steps">
+      <article class="step reveal">
+        <div class="step__num">i.</div>
+        <h3 class="step__title">ПИШЕШЬ МНЕ</h3>
+        <p class="step__text">Telegram <strong>@ivan_polenok</strong> — самый быстрый способ. Кратко: кто ты, откуда трафик, какое GEO. Без эссе.</p>
+      </article>
+      <article class="step reveal">
+        <div class="step__num">ii.</div>
+        <h3 class="step__title">ГОВОРИМ ПО-ЧЕЛОВЕЧЕСКИ</h3>
+        <p class="step__text">30 минут. Без слайдов и питчей. Ты рассказываешь что делаешь, я — что могу предложить. Показываю формулу ДО старта.</p>
+      </article>
+      <article class="step reveal">
+        <div class="step__num">iii.</div>
+        <h3 class="step__title">ЗАПУСКАЕМСЯ</h3>
+        <p class="step__text">Тест за 3–7 дней. Если цифры сходятся — масштабируемся. Если нет — честно говорим и расходимся друзьями.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── VIBES ─────────────── -->
+<section class="vibes" id="vibes">
+  <svg class="sfx sfx--vibes" viewBox="0 0 220 140" aria-hidden="true">
+    <polygon points="110,4 132,40 196,30 156,70 200,128 122,98 88,138 78,92 12,118 50,76 4,46 70,46" fill="#FFD60A" stroke="#0A0A0A" stroke-width="4"/>
+    <text x="110" y="86" text-anchor="middle" font-family="Anton, sans-serif" font-size="40" fill="#0A0A0A">BOOM!</text>
+  </svg>
+  <div class="wrap">
+    <div class="badge badge--yellow tilt-l reveal">★ THE FUN PART ★</div>
+    <h2 class="vibes__title headline reveal">
+      <span>ХВАТИТ ОФИЦИАЛЬНО.</span>
+      <span class="yh">ПО-ЧЕЛОВЕЧЕСКИ.</span>
+    </h2>
+    <p class="vibes__intro reveal">ЕСЛИ ТЫ ДОЧИТАЛ ДО СЮДА —<br>МЫ УЖЕ НА ОДНОЙ ВОЛНЕ.<br>ВЫБИРАЙ ФОРМАТ ЗНАКОМСТВА.</p>
+
+    <div class="vibes__grid">
+      <article class="vibe reveal">
+        <svg class="vibe__burst" viewBox="0 0 100 100"><polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#FFD60A" stroke="#0A0A0A" stroke-width="3"/></svg>
+        <div class="vibe__icon">☕</div>
+        <h3 class="vibe__title">ВЫПИТЬ КОФЕ<br><span class="yh">БЕЗ ТАЙМЕРА</span></h3>
+        <p class="vibe__text">Если ты в Ереване — назначай. Знаю где варят лучший в городе. Поговорим про CPA, жизнь, кино — про что захочешь. Без повестки.</p>
+      </article>
+      <article class="vibe reveal">
+        <svg class="vibe__burst" viewBox="0 0 100 100"><polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#E63946" stroke="#0A0A0A" stroke-width="3"/></svg>
+        <div class="vibe__icon">🏄</div>
+        <h3 class="vibe__title">ЛЮБОЙ <span class="yh">СПОРТ</span></h3>
+        <p class="vibe__text">Я вообще-то спортсмен: падел, сёрф, бег, зал. Выбирай любую активность — потеть рядом лучший формат знакомства. Без LinkedIn-ужимок.</p>
+      </article>
+      <article class="vibe reveal">
+        <svg class="vibe__burst" viewBox="0 0 100 100"><polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#FFD60A" stroke="#0A0A0A" stroke-width="3"/></svg>
+        <div class="vibe__icon">🎙</div>
+        <h3 class="vibe__title">ЗАПИСАТЬ <span class="yh">СТРИМ</span></h3>
+        <p class="vibe__text">Зови к себе на эфир или приходи ко мне. Поговорим про CIS-гео, Meta, реальные кейсы и провалы. За плечами 8+ эфиров.</p>
+      </article>
+      <article class="vibe reveal">
+        <svg class="vibe__burst" viewBox="0 0 100 100"><polygon points="50,0 58,38 95,32 65,55 80,95 50,72 20,95 35,55 5,32 42,38" fill="#E63946" stroke="#0A0A0A" stroke-width="3"/></svg>
+        <div class="vibe__icon">✈</div>
+        <h3 class="vibe__title">ПОДБИТЬ <span class="yh">ПЛАНЫ</span></h3>
+        <p class="vibe__text">Люблю путешествия. Едешь куда-то — возможно уже был. Скину споты, людей, маршруты. Open for anything — и в этом смысле тоже.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── CONTACT ─────────────── -->
+<section class="contact" id="contact">
+  <svg class="sfx sfx--contact" viewBox="0 0 220 140" aria-hidden="true">
+    <polygon points="110,4 132,40 196,30 156,70 200,128 122,98 88,138 78,92 12,118 50,76 4,46 70,46" fill="#E63946" stroke="#0A0A0A" stroke-width="4"/>
+    <text x="110" y="86" text-anchor="middle" font-family="Anton, sans-serif" font-size="44" fill="#FFF8E7">ZAP!</text>
+  </svg>
+  <svg class="rays" viewBox="0 0 800 800" aria-hidden="true">
+    <g fill="#0A0A0A" id="raysG2"></g>
+  </svg>
+  <div class="wrap">
+    <div class="badge reveal" style="display:inline-flex">★ END OF ISSUE · TO BE CONTINUED ★</div>
+    <h2 class="contact__title reveal">
+      <span class="l1">НУ ЧТО,</span>
+      <span class="l2">ПИШЕМ?</span>
+    </h2>
+
+    <a class="cta-magnet" id="ctaMagnet" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">OPEN TELEGRAM →</a>
+
+    <div class="team-up reveal">lil.bet&nbsp;<span class="x">×</span>&nbsp;IVAN — заливаем вместе</div>
+
+    <div class="channels reveal">
+      <a class="channel" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">⚡ @ivan_polenok<small>direct line · answers in hours</small></a>
+      <a class="channel" href="mailto:polenok.ivan18@gmail.com">★ EMAIL<small>polenok.ivan18@gmail.com</small></a>
+      <a class="channel" href="https://t.me/ivan_polenok" target="_blank" rel="noopener">⚡ CONFERENCES<small>SiGMA / iGB / AWA — open to speak</small></a>
+    </div>
+
+    <p class="ps reveal">P.S. Если ты AM и твой партнёр ищет CIS/Africa-оффер — познакомь нас. Отвечу быстро, обращусь с уважением.</p>
+  </div>
+</section>
+
+<!-- ─────────────── FOOTER ─────────────── -->
+<footer class="foot">
+  <div class="wrap foot__row">
+    <span>© 2026 / ALL RIGHTS · NO WRONGS</span>
+    <span class="foot__mid">★ POLENOK ★</span>
+    <span>MADE IN YEREVAN ✦ AM</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ----- build sunburst rays (24 wedges) -----
+  function buildRays(target){
+    const g = document.getElementById(target);
+    if(!g) return;
+    const n=24, cx=400, cy=400, r=600, ang= (Math.PI*2)/n, w=0.06;
+    let s='';
+    for(let i=0;i<n;i+=2){
+      const a = i*ang;
+      const x1 = cx + Math.cos(a-w)*r;
+      const y1 = cy + Math.sin(a-w)*r;
+      const x2 = cx + Math.cos(a+w)*r;
+      const y2 = cy + Math.sin(a+w)*r;
+      s += `<polygon points="${cx},${cy} ${x1},${y1} ${x2},${y2}"/>`;
+    }
+    g.innerHTML = s;
+  }
+  buildRays('raysG');
+  buildRays('raysG2');
+
+  // ----- ticker -----
+  (function(){
+    const t = document.getElementById('tickerTrack');
+    const seq = [
+      ['ТРАФИК','w'],['★','sym'],['OFFERS','w out'],['⚡','sym'],
+      ['ПАДЕЛ','w'],['★','sym'],['SURF','w out'],['⚡','sym'],
+      ['YEREVAN','w'],['★','sym'],['lil.bet','w out'],['⚡','sym'],
+    ];
+    let html='';
+    for(let k=0;k<2;k++){
+      seq.forEach(([word,cls])=>{ html += `<span class="${cls}">${word}</span>`; });
+      seq.forEach(([word,cls])=>{ html += `<span class="${cls}">${word}</span>`; });
+    }
+    t.innerHTML = html;
+  })();
+
+  // ----- progress bar -----
+  const prog = document.getElementById('prog');
+  function onScroll(){
+    const h = document.documentElement;
+    const total = h.scrollHeight - h.clientHeight;
+    const p = total>0 ? (h.scrollTop/total)*100 : 0;
+    prog.style.width = p+'%';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // ----- hero entrance -----
+  requestAnimationFrame(()=>{
+    document.getElementById('hero').classList.add('start');
+  });
+
+  // ----- glitch on hero title hover -----
+  const title = document.getElementById('heroTitle');
+  title.addEventListener('mouseenter', ()=>{
+    title.classList.add('glitch');
+    setTimeout(()=>title.classList.remove('glitch'), 480);
+  });
+
+  // ----- scroll reveal -----
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ----- counters -----
+  const countIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.count,10);
+      const dur = 1100; const start = performance.now();
+      function tick(t){
+        const p = Math.min(1, (t-start)/dur);
+        const eased = 1 - Math.pow(1-p, 3);
+        el.textContent = Math.round(target*eased);
+        if(p<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    });
+  }, {threshold:0.5});
+  document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
+
+  // ----- rows open/close -----
+  document.querySelectorAll('[data-row]').forEach(row=>{
+    const head = row.querySelector('.row__head');
+    head.addEventListener('click', ()=>row.classList.toggle('open'));
+  });
+
+  // ----- cursor (desktop only) -----
+  if(matchMedia('(min-width:901px)').matches){
+    const cur = document.getElementById('cur');
+    const curD = document.getElementById('curD');
+    let tx=0,ty=0,cx=0,cy=0,dx=0,dy=0;
+    window.addEventListener('mousemove', (e)=>{
+      tx = e.clientX; ty = e.clientY;
+      dx = e.clientX; dy = e.clientY;
+      curD.style.transform = `translate(${dx}px,${dy}px) translate(-50%,-50%)`;
+    });
+    function raf(){
+      cx += (tx-cx)*0.18;
+      cy += (ty-cy)*0.18;
+      cur.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+      requestAnimationFrame(raf);
+    }
+    raf();
+    const hoverSel = 'a,button,.row__head,.stat,.step,.vibe,.channel,.cta-magnet';
+    document.querySelectorAll(hoverSel).forEach(el=>{
+      el.addEventListener('mouseenter', ()=>cur.classList.add('is-hover'));
+      el.addEventListener('mouseleave', ()=>cur.classList.remove('is-hover'));
+    });
+  }
+
+  // ----- magnetic CTA -----
+  (function(){
+    const btn = document.getElementById('ctaMagnet');
+    if(!btn) return;
+    let raf=null;
+    btn.addEventListener('mousemove', (e)=>{
+      const r = btn.getBoundingClientRect();
+      const mx = e.clientX - (r.left + r.width/2);
+      const my = e.clientY - (r.top + r.height/2);
+      if(raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(()=>{
+        btn.style.transform = `translate(${mx*0.15}px, ${my*0.15}px)`;
+      });
+    });
+    btn.addEventListener('mouseleave', ()=>{
+      btn.style.transition = 'transform .5s cubic-bezier(.34,1.56,.64,1)';
+      btn.style.transform = '';
+      setTimeout(()=>btn.style.transition='', 500);
+    });
+  })();
+
+  // ----- parallax on decor + bubble rotate -----
+  const bubble = document.getElementById('bubble');
+  const decors = document.querySelectorAll('.burst');
+  document.addEventListener('scroll', ()=>{
+    const y = window.scrollY;
+    decors.forEach((d,i)=>{ d.style.translate = `0 ${y * (i%2?0.18:-0.12)}px`; });
+    if(bubble){
+      const rot = 4 + Math.sin(y/220) * 4;
+      bubble.style.transform = `rotate(${rot}deg)`;
+    }
+  }, {passive:true});
+
+})();
+</script>
+</body>
+</html>
