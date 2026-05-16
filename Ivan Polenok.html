@@ -231,6 +231,12 @@ section{border-bottom:4px solid var(--ink);position:relative}
 
 /* ─────────── lil.bet co-brand + sfx + motto ─────────── */
 .lilbet-mark{font-family:'Anton',sans-serif;font-weight:400;background:var(--ink);color:var(--yellow);padding:0 8px;border:1.5px solid var(--ink);font-style:normal;letter-spacing:-.01em;display:inline-block}
+.hero__kicker{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 18px;position:relative;z-index:2;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:18px}
+.hero__kicker span{padding:6px 12px;border:2.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink);background:var(--ink);color:var(--cream);display:inline-block}
+.hero__kicker span.k-direct{background:var(--red);color:var(--cream)}
+.hero__kicker span.k-product{background:var(--cream);color:var(--ink)}
+.hero__kicker span.k-geo{background:var(--yellow);color:var(--ink)}
+@media (max-width:500px){.hero__kicker{font-size:14px;gap:6px}.hero__kicker span{padding:4px 9px;box-shadow:3px 3px 0 var(--ink)}}
 .team-up{display:inline-flex;align-items:center;gap:6px;margin-top:34px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;background:var(--ink);color:var(--cream);padding:10px 16px;border:3px solid var(--ink);box-shadow:var(--shadow-sm);text-transform:uppercase;position:relative;z-index:2}
 .team-up .x{color:var(--red);font-family:'Anton',sans-serif;font-size:22px;line-height:1}
 .badge .lilbet-mark{background:var(--yellow);color:var(--ink);border-color:var(--ink);padding:0 6px;margin-left:4px;font-size:16px}
@@ -398,7 +404,7 @@ section{border-bottom:4px solid var(--ink);position:relative}
 
   <div class="wrap">
     <div class="hero__meta">
-      <div class="badge">★ AFFILIATE MANAGER × <span class="lilbet-mark">lil.bet</span></div>
+      <div class="badge">★ iGAMING · AFFILIATE MANAGER × <span class="lilbet-mark">lil.bet</span></div>
       <div class="badge badge--red">VOL. 05 · 2026</div>
     </div>
 
@@ -409,9 +415,15 @@ section{border-bottom:4px solid var(--ink);position:relative}
       <text x="110" y="82" text-anchor="middle" font-family="Anton, sans-serif" font-size="40" fill="#0A0A0A">POW!</text>
     </svg>
 
+    <div class="hero__kicker">
+      <span class="k-direct">★ ПРЯМОЙ РЕКЛАМОДАТЕЛЬ</span>
+      <span class="k-product">CASINO + BETTING</span>
+      <span class="k-geo">CIS + AFRICA</span>
+    </div>
+
     <h1 class="hero__title" id="heroTitle">
-      <span class="line"><span class="l1">ТРАФИК.</span></span>
-      <span class="line"><span class="l2">ОФФЕРЫ.</span></span>
+      <span class="line"><span class="l1">iGAMING-ТРАФИК.</span></span>
+      <span class="line"><span class="l2">ОФФЕРЫ <span class="lilbet-mark" style="font-size:.85em;vertical-align:.08em">lil.bet</span>.</span></span>
       <span class="line l3-wrap"><span class="l3">ПО-ЧЕЛОВЕЧЕСКИ.</span></span>
     </h1>
 
